@@ -9,19 +9,20 @@ const MTLLoader = require("./loaders/MTLLoader.js");
 const FBXLoader = require("./loaders/FBXLoader.js");
 const GLTFLoader = require("./loaders/GLTFLoader.js");
 const ColladaLoader = require("./loaders/ColladaLoader.js");
+const {IFCLoader} = require("./loaders/IFCLoader.js");
 const objLoader = new OBJLoader();
 const materialLoader = new MTLLoader();
 const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
 const daeLoader = new ColladaLoader();
+const ifcLoader = new IFCLoader();
 
 function loadObj(options, cb, promise) {
 
 	if (options === undefined) return console.error("Invalid options provided to loadObj()");
 	options = utils._validate(options, Objects.prototype._defaults.loadObj);
 
-	let loader;
-	if (!options.type) { options.type = 'mtl'; };
+	if (!options.type) { options.type = 'mtl'; }
 	//[jscastro] support other models
 	switch (options.type) {
 		case "mtl":
@@ -38,6 +39,9 @@ function loadObj(options, cb, promise) {
 			break;
 		case "dae":
 			loader = daeLoader;
+			break;
+		case "ifc":
+			loader = ifcLoader;
 			break;
 	}
 
@@ -97,7 +101,7 @@ function loadObj(options, cb, promise) {
 			userScaleGroup.idle();
 
 		}, () => (null), error => {
-				console.error("Could not load model file: " + options.obj + " \n " + error.stack);
+				console.error("Could not load model file: " + options.obj + " \n " + error);
 				promise("Error loading the model");
 		});
 
