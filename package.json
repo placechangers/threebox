@@ -33,6 +33,9 @@
         "uglifyify": "^5.0.2",
         "watchify": "^4.0.0"
     },
+    "peerDependencies": {
+        "web-ifc": "0.0.28"
+    },
     "keywords": [
         "three.js",
         "mapbox",
