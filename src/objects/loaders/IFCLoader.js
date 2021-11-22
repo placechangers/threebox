@@ -27,11 +27,11 @@ import {
     Mesh,
     MeshLambertMaterial
 } from 'three';
-import {BufferGeometryUtils} from 'three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 const IdAttrName = 'expressID';
 const merge = (geoms, createGroups = false) => {
-    return BufferGeometryUtils.mergeBufferGeometries(geoms, createGroups);
+    return mergeBufferGeometries(geoms, createGroups);
 };
 const newFloatAttr = (data, size) => {
     return new BufferAttribute(new Float32Array(data), size);
