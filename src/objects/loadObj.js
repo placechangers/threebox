@@ -4,8 +4,6 @@
  */
 const utils = require("../utils/utils.js");
 const Objects = require('./objects.js');
-const {IFCSPACE, IFCOPENINGELEMENT} = require("three");
-import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree} from 'three-mesh-bvh';
 const OBJLoader = require("./loaders/OBJLoader.js");
 const MTLLoader = require("./loaders/MTLLoader.js");
 const FBXLoader = require("./loaders/FBXLoader.js");
@@ -146,17 +144,22 @@ function loadObj(options, cb, promise) {
 			if (type !== 'ifc') {
 				resolve();
 			} else {
-				loader.ifcManager.setupThreeMeshBVH(
-					computeBoundsTree,
-					disposeBoundsTree,
-					acceleratedRaycast
-				);
-				loader.ifcManager.parser.setupOptionalCategories({
-					[IFCSPACE]: true,
-					[IFCOPENINGELEMENT]: false
-				}).then(() => {
-					resolve();
-				})
+				// const {IFCSPACE, IFCOPENINGELEMENT} = require("three");
+				// const {acceleratedRaycast, computeBoundsTree, disposeBoundsTree} = require('three-mesh-bvh');
+				// loader.ifcManager.useFragments = false;
+				// loader.ifcManager.setupThreeMeshBVH(
+				// 	computeBoundsTree,
+				// 	disposeBoundsTree,
+				// 	acceleratedRaycast
+				// );
+				// loader.ifcManager.parser.setupOptionalCategories({
+				// 	[IFCSPACE]: false,
+				// 	[IFCOPENINGELEMENT]: false
+				// }).then(() => {
+				// 	console.log('configure loader done');
+				// 	resolve();
+				// })
+				resolve();
 			}
 		});
 	}
