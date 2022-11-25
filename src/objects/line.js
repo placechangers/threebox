@@ -10,7 +10,7 @@ function line(obj){
     var straightProject = utils.lnglatsToWorld(obj.geometry);
 	var normalized = utils.normalizeVertices(straightProject);
     var flattenedArray = utils.flattenVectors(normalized.vertices);
-	//console.log('line', normalized.vertices)
+	//console.warn('line', normalized.vertices)
 
 	var geometry = new THREE.LineGeometry();
 	geometry.setPositions( flattenedArray );

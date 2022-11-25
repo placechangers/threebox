@@ -10,7 +10,7 @@ var utils = {
 			uglymatrix[s + 4],
 			uglymatrix[s + 8],
 			uglymatrix[s + 12]];
-			console.log(quartet.map(function (num) { return num.toFixed(4) }))
+			console.warn(quartet.map(function (num) { return num.toFixed(4) }))
 		}
 	},
 
@@ -141,11 +141,11 @@ var utils = {
 	},
 
 	projectToScreen: function (coords) {
-		console.log("WARNING: Projecting to screen coordinates is not yet implemented");
+		console.warn("WARNING: Projecting to screen coordinates is not yet implemented");
 	},
 
 	unprojectFromScreen: function (pixel) {
-		console.log("WARNING: unproject is not yet implemented");
+		console.warn("WARNING: unproject is not yet implemented");
 	},
 
 	//world units to lnglat

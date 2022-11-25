@@ -42,6 +42,7 @@ Threebox.prototype = {
 	init: function (map, glContext, options) {
 
 		// apply starter options
+		this.utils = utils;
 		this.options = utils._validate(options || {}, defaultOptions);
 
 		this.map = map;
@@ -1024,7 +1025,7 @@ Threebox.prototype = {
 		this.sunPosition = this.getSunPosition(date, [this.mapCenter.lng, this.mapCenter.lat]);  
 		let altitude = this.sunPosition.altitude;
 		let azimuth = Math.PI + this.sunPosition.azimuth;
-		//console.log("Altitude: " + utils.degreeify(altitude) + ", Azimuth: " + (utils.degreeify(azimuth)));
+		//console.warn("Altitude: " + utils.degreeify(altitude) + ", Azimuth: " + (utils.degreeify(azimuth)));
 
 		let radius = ThreeboxConstants.WORLD_SIZE / 2;
 		let alt = Math.sin(altitude);
@@ -1036,7 +1037,7 @@ Threebox.prototype = {
 		this.lights.dirLight.position.multiplyScalar(radius);
 		this.lights.dirLight.intensity = Math.max(alt, 0);
 		this.lights.hemiLight.intensity = Math.max(alt * 1, 0.1);
-		//console.log("Intensity:" + this.lights.dirLight.intensity);
+		//console.warn("Intensity:" + this.lights.dirLight.intensity);
 		this.lights.dirLight.updateMatrixWorld();
 		this.updateLightHelper();
 		if (this.map.loaded()) {
@@ -1090,8 +1091,8 @@ Threebox.prototype = {
 	//[jscastro] method to fully dispose the resources, watch out is you call this without navigating to other page
 	dispose: async function () {
 
-		console.log(this.memory());
-		//console.log(window.performance.memory);
+		console.warn(this.memory());
+		//console.warn(window.performance.memory);
 
 		return new Promise((resolve) => {
 			resolve(
@@ -1103,12 +1104,12 @@ Threebox.prototype = {
 					this.world = null;
 					this.objectsCache.clear();
 					this.labelRenderer.dispose();
-					console.log(this.memory());
+					console.warn(this.memory());
 					this.renderer.dispose();
 					return resolve;
 				})
 			);
-			//console.log(window.performance.memory);
+			//console.warn(window.performance.memory);
 		});
 
 	},

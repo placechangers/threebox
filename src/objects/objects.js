@@ -804,7 +804,7 @@ Objects.prototype = {
 		obj.remove = function (o) {
 			if (!o) return;
 			o.traverse(m => {
-				//console.log('dispose geometry!')
+				//console.warn('dispose geometry!')
 				if (m.geometry) m.geometry.dispose();
 				if (m.material) {
 					if (m.material.isMaterial) {
@@ -832,7 +832,7 @@ Objects.prototype = {
 			}
 			root._addMethods(dupe); // add methods
 
-			if (!options || utils.equal(options.scale, obj.userData.scale)) {
+			if (!options || (utils.equal(options.rotation, obj.userData.rotation) && utils.equal(options.scale, obj.userData.scale))) {
 				//no options, no changes, just return the same object
 				dupe.copyAnchor(obj); // copy anchors
 				//[jscastro] we add by default a tooltip that can be overriden later or hide it with threebox `enableTooltips`
@@ -885,7 +885,7 @@ Objects.prototype = {
 				if (o.parent && o.parent.name == "world") return;
 				if (o.name === "threeboxObject") return;
 
-				//console.log('dispose geometry!')
+				//console.warn('dispose geometry!')
 				if (o.geometry) o.geometry.dispose();
 
 				if (o.material) {
@@ -905,14 +905,14 @@ Objects.prototype = {
 		}
 
 		const cleanMaterial = material => {
-			//console.log('dispose material!')
+			//console.warn('dispose material!')
 			material.dispose()
 
 			// dispose textures
 			for (const key of Object.keys(material)) {
 				const value = material[key]
 				if (value && typeof value === 'object' && 'minFilter' in value) {
-					//console.log('dispose texture!')
+					//console.warn('dispose texture!')
 					value.dispose()
 				}
 			}

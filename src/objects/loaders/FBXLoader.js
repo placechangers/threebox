@@ -128,7 +128,7 @@ const fflate = require('../fflate.min.js');
 
 				fbxTree = new TextParser().parse(FBXText);
 
-			} // console.log( fbxTree );
+			} // console.warn( fbxTree );
 
 
 			const textureLoader = new THREE.TextureLoader(this.manager).setPath(this.resourcePath || path).setCrossOrigin(this.crossOrigin);

@@ -45,7 +45,7 @@ AnimationManager.prototype = {
 			for (let i = 0; i < obj.animations.length; i++) {
 
 				if (animationIndex > obj.animations.length)
-					console.log("The animation index " + animationIndex + " doesn't exist for this object");
+					console.warn("The animation index " + animationIndex + " doesn't exist for this object");
 				let animation = obj.animations[i];
 				let action = obj.mixer.clipAction(animation);
 				obj.actions.push(action);
@@ -375,7 +375,7 @@ AnimationManager.prototype = {
 
 				// if an animation is past its expiration date, cull it
 				if (!options.expiration) {
-					// console.log('culled')
+					// console.warn('culled')
 
 					object.animationQueue.splice(i, 1);
 

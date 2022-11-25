@@ -248,7 +248,7 @@ const THREE = require('three');
 							break;
 
 						default:
-							console.log(child);
+							console.warn(child);
 
 					}
 
@@ -1908,7 +1908,7 @@ const THREE = require('three');
 							break;
 
 						default:
-							console.log(child);
+							console.warn(child);
 
 					}
 
@@ -2906,7 +2906,7 @@ const THREE = require('three');
 
 						} else {
 
-							console.log('THREE.ColladaLoader: ' + jointIndex + ' does not exist.');
+							console.warn('THREE.ColladaLoader: ' + jointIndex + ' does not exist.');
 
 						}
 
@@ -3071,7 +3071,7 @@ const THREE = require('three');
 							break;
 
 						default:
-							console.log(child);
+							console.warn(child);
 
 					}
 
@@ -3657,7 +3657,7 @@ const THREE = require('three');
 
 
 			const version = collada.getAttribute('version');
-			console.log('THREE.ColladaLoader: File version', version);
+			console.warn('THREE.ColladaLoader: File version', version);
 			const asset = parseAsset(getElementsByTagName(collada, 'asset')[0]);
 			const textureLoader = new THREE.TextureLoader(this.manager);
 			textureLoader.setPath(this.resourcePath || path).setCrossOrigin(this.crossOrigin);

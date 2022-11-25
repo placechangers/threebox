@@ -7,7 +7,7 @@ const utils = require("../utils/utils.js");
 const ThreeboxConstants = require("../utils/constants.js");
 
 function CameraSync(map, camera, world) {
-    //    console.log("CameraSync constructor");
+    //    console.warn("CameraSync constructor");
     this.map = map;
     this.camera = camera;
     this.active = true;
@@ -52,7 +52,7 @@ CameraSync.prototype = {
 
     updateCamera: function (ev) {
         if (!this.camera) {
-            console.log('nocamera')
+            console.warn('nocamera')
             return;
         }
 
@@ -245,7 +245,7 @@ CameraSync.prototype = {
         matrix.elements[9] *= pixelsPerMeter;
         matrix.elements[10] *= pixelsPerMeter;
         matrix.elements[11] *= pixelsPerMeter;
-        //console.log(matrix.elements);
+        //console.warn(matrix.elements);
         return matrix;
     },
 
