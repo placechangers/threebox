@@ -122,7 +122,8 @@ Sets up a Threebox scene using an [Mapbox map](https://docs.mapbox.com/mapbox-gl
 | `enableSelectingObjects`     | no       | false   | boolean  | Enables the Mouseover and Selection of 3D objects. This will fire the event [`SelectedChange`](#SelectedChange). This value will set the `options.bbx` value of the objects created.|
 | `enableDraggingObjects`     | no       | false   | boolean  | Enables to the option to Drag a 3D object. This will fire the event [`ObjectDragged`](#ObjectDragged) where `draggedAction = 'translate'` or `draggedAction = 'altitude'` |
 | `enableRotatingObjects`     | no       | false   | boolean  | Enables to the option to Drag a 3D object. This will fire the event [`ObjectDragged`](#ObjectDragged)  where `draggedAction = 'rotate'`|
-| `enableToltips`     | no       | false   | boolean  | Enables the default tooltips on fill-extrusion features and 3D Objects|
+| `enableTooltips`     | no       | false   | boolean  | Enables the default tooltips on fill-extrusion features and 3D Objects|
+| `enableHelpTooltips`     | no       | false   | boolean  | Enables the default help tooltips when an object is being moved, rotated or measured. |
 | `multiLayer`     | no       | false   | boolean  | Enables the option for multi layer pages where a default layer will be created internally that will manage the [`tb.update`](#update) calls  |
 | `orthographic`     | no       | false   | boolean  | Enables the option to set a [`THREE.OrthographicCamera`](https://threejs.org/docs/index.html#api/en/cameras/OrthographicCamera) instead of a `THREE.PerspectiveCamera` which is the default in Mapbox  |
 | `fov`     | no       | ThreeboxConstants.FOV_DEGREES | number | Enables to set the FOV of the default [`THREE.PerspectiveCamera`](https://threejs.org/docs/index.html#api/en/cameras/PerspectiveCamera). This value has no effect if `orthographic: true`  |
@@ -1075,7 +1076,7 @@ Add a extruded shape to the map. Internally, calls `THREE.ExtrudeBufferGeometry`
 | `units`    | no       | `scene`      | string ("scene" or "meters") | Units with which to interpret the object's vertices. If meters, Threebox will also rescale the object with changes in latitude, to appear to scale with objects and geography nearby.|
 | `scale`     | no       | 1   | number or {x, y, z}  | Scale of the object along the three axes, to size it appropriately before future transformations. Note that future scaling applies atop this transformation, rather than overwriting it. `scale` attribute must be provided in number or per axis ((i.e. for an object transformed to 3 times higher than it's default size  `scale: {x: 1, y: 1, z: 3}`|
 | `rotation`     | no       | 0   | number or {x, y, z}  | Rotation of the object along the three axes, to align it to desired orientation before future rotations. Note that future rotations apply atop this transformation, and do not overwrite it. `rotate` attribute must be provided in number or per axis ((i.e. for an object rotated 90 degrees over the x axis `rotation: {x: 90, y: 0, z: 0}`|
-| `materials`     | no       | null   | threeMaterial or threeMaterials array  | [THREE material](https://github.com/mrdoob/three.js/tree/master/src/materials) to use. Can be invoked with a text string, or a predefined material object via THREE itself.|   
+| `materials`     | no       | `THREE.MeshPhongMaterial({ color: 0x660000, side: THREE.DoubleSide })`   | threeMaterial or threeMaterials array  | [THREE material](https://github.com/mrdoob/three.js/tree/master/src/materials) to use. Can be invoked with a text string, or a predefined material object via THREE itself.|   
 | `anchor`     | no       | `bottom-left`   | string | This param will position the pivotal center of the 3D models to the coords it's positioned. This could have the following values `top`, `bottom`, `left`, `right`, `center`, `top-left`, `top-right`, `bottom-left`, `bottom-right`. Default value is `bottom-left` |
 | `adjustment`     | no       | 1   | {x, y, z}  | For geometries the center is by default {0,0,0} position, this is the point to be used for location and for rotation. For perfect positioning and heigth from floor calculations this could be redefined in normalized units, `adjustment` param must be provided in units per axis (i.e. `adjustment: {x: -0.5, y: -0.5, z: 0}` , so the model will correct the center position of the object minus half of the x axis length and minus half of the y axis length ). If you position a cube created throuhg this method with by default center in a concrete `lnglat`on 0 height, half of the cube will be below the ground map level and the object will position at it's `{x,y}` center, so you can define `adjustment: { x: -0.5, y: -0.5, z: 0.5 }` to change the center to the bottom-left corner and that corner will be exactly in the `lnglat` position at the ground level. |
 | `tooltip`     | no       | false   | bool  | This param allows to have or not a tooltip, by default is set with the value of `tb.enableTooltips` |
@@ -1216,7 +1217,7 @@ Internally this method uses a `CSS2DObject` rendered by [`THREE.CSS2DRenderer`](
 
 #### addHelp
 ```js
-obj.addHelp(helpText [,objName = helpName, mapboxSyle = false, center = obj.anchor, height = 0])
+obj.addHelp(helpText [,objName = helpName, mapboxStyle = false, center = obj.anchor, height = 0])
 ```
 This method creates a browser-like help tooltip instance that is accessible through `obj.help`. 
 This help tooltip is only visible when an object is being dragged for a translation, rotation or altitude change. 
@@ -1247,7 +1248,7 @@ Internally this method calls `obj.drawLabelHTML` to create the needed HTML to wr
 
 #### addTooltip
 ```js
-obj.addTooltip(tooltipText [, mapboxSyle = false, center = obj.anchor, custom = true, height = 1])
+obj.addTooltip(tooltipText [, mapboxStyle = false, center = obj.anchor, custom = true, height = 1])
 ```
 This method creates a browser-like tooltip for the object using the tooltipText. 
 If `mapboxStyle` is true, it applies the same styles the *Mapbox GL* popups.
@@ -1467,7 +1468,7 @@ This get/set property receives and returns a [`THREE.Box3Helper`](https://threej
 
 By Threebox design `.boundingBox` is hidden for [`THREE.Raycaster`](https://threejs.org/docs/#api/en/core/Raycaster) even when it's visible for the camera.
 
-*TODO: In next versions of Threebox, this object material will be configurable. In this versión still predefined in Objects.prototype*
+*TODO: In next versions of Threebox, this object material will be configurable. In this versiÃ³n still predefined in Objects.prototype*
 
 <br>
 
@@ -1481,7 +1482,7 @@ This get/set property receives and returns a [`THREE.Box3Helper`](https://threej
 
 By Threebox design `.boundingBoxShadow` is hidden for [`THREE.Raycaster`](https://threejs.org/docs/#api/en/core/Raycaster) even when it's visible for the camera.
 
-*TODO: In next versions of Threebox, this object material will be configurable. In this versión still predefined in Objects.prototype*
+*TODO: In next versions of Threebox, this object material will be configurable. In this versiÃ³n still predefined in Objects.prototype*
 
 <br>
 
