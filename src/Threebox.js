@@ -25,7 +25,7 @@ function Threebox(map, glContext, options){
 
     this.init(map, glContext, options);
 
-};
+}
 
 Threebox.prototype = {
 
