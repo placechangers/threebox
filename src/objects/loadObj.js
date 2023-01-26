@@ -160,7 +160,7 @@ function loadObj(options, cb, promise) {
 				// 	resolve();
 				// })
 				loader.ifcManager.applyWebIfcConfig({
-					COORDINATE_TO_ORIGIN: true,
+					COORDINATE_TO_ORIGIN: false,
 					USE_FAST_BOOLS: true
 				}).then(() => {
 					resolve();
