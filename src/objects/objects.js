@@ -832,7 +832,7 @@ Objects.prototype = {
 			}
 			root._addMethods(dupe); // add methods
 
-			if (!options || utils.equal(options.scale, obj.userData.scale)) {
+			if (!options) {
 				//no options, no changes, just return the same object
 				dupe.copyAnchor(obj); // copy anchors
 				//[jscastro] we add by default a tooltip that can be overriden later or hide it with threebox `enableTooltips`
