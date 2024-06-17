@@ -1072,7 +1072,8 @@ Objects.prototype = {
 			bbox: true,
 			tooltip: true,
 			raycasted: true,
-			clone: true
+			clone: true,
+			withCredentials: false
 		},
 
 		Object3D: {
