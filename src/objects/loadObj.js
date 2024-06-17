@@ -15,6 +15,19 @@ const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
 const daeLoader = new ColladaLoader();
 
+// IFC Loader
+const webifc = require("web-ifc");
+const obc = require("@thatopen/components");
+const components = new obc.Components();
+const ifcLoader = components.get(obc.IfcLoader);
+ifcLoader.settings.excludedCategories.add(webifc.IFCSPACE);
+ifcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = false;
+ifcLoader.settings.webIfc.USE_FAST_BOOLS = true;
+ifcLoader.settings.wasm = {
+	path: "https://unpkg.com/web-ifc@0.0.53/",
+	absolute: true
+};
+
 function loadObj(options, cb, promise) {
 
 	if (options === undefined) return console.error("Invalid options provided to loadObj()");
@@ -39,6 +52,9 @@ function loadObj(options, cb, promise) {
 		case "dae":
 			loader = daeLoader;
 			break;
+		case "ifc":
+			loader = ifcLoader;
+			break;
 	}
 
 	materialLoader.withCredentials = options.withCredentials;
@@ -54,56 +70,60 @@ function loadObj(options, cb, promise) {
 		}
 
 		loader.withCredentials = options.withCredentials;
-		loader.load(options.obj, obj => {
 
-			//[jscastro] MTL/GLTF/FBX models have a different structure
-			let animations = [];
-			switch (options.type) {
-				case "mtl":
-					obj = obj.children[0];
-					break;
-				case "gltf":
-				case "glb":
-				case "dae":
-					animations = obj.animations;
-					obj = obj.scene;
-					break;
-				case "fbx":
-					animations = obj.animations;
-					break;
-			}
-			obj.animations = animations;
-			// [jscastro] options.rotation was wrongly used
-			const r = utils.types.rotation(options.rotation, [0, 0, 0]);
-			const s = utils.types.scale(options.scale, [1, 1, 1]);
-			obj.rotation.set(r[0], r[1], r[2]);
-			obj.scale.set(s[0], s[1], s[2]);
-			// [jscastro] normalize specular/metalness/shininess from meshes in FBX and GLB model as it would need 5 lights to illuminate them properly
-			if (options.normalize) { normalizeSpecular(obj); }
-			obj.name = "model";
-			let userScaleGroup = Objects.prototype._makeGroup(obj, options);
-			Objects.prototype._addMethods(userScaleGroup);
-			//[jscastro] calculate automatically the pivotal center of the object
-			userScaleGroup.setAnchor(options.anchor);
-			//[jscastro] override the center calculated if the object has adjustments
-			userScaleGroup.setCenter(options.adjustment);
-			//[jscastro] if the object is excluded from raycasting
-			userScaleGroup.raycasted = options.raycasted;
-			//[jscastro] return to cache
-			promise(userScaleGroup);
-			//[jscastro] then return to the client-side callback
-			cb(userScaleGroup);
-			//[jscastro] apply the fixed zoom scale if needed
-			userScaleGroup.setFixedZoom(options.mapScale);
-			//[jscastro] initialize the default animation to avoid issues with skeleton position
-			userScaleGroup.idle();
+		configureLoader(loader, options.type).then(() => {
+			loader.load(options.obj, obj => {
 
-		}, () => (null), error => {
+				//[jscastro] MTL/GLTF/FBX models have a different structure
+				let animations = [];
+				switch (options.type) {
+					case "mtl":
+						obj = obj.children[0];
+						break;
+					case "gltf":
+					case "glb":
+					case "dae":
+						animations = obj.animations;
+						obj = obj.scene;
+						break;
+					case "fbx":
+						animations = obj.animations;
+						break;
+				}
+				obj.animations = animations;
+				// [jscastro] options.rotation was wrongly used
+				const r = utils.types.rotation(options.rotation, [0, 0, 0]);
+				const s = utils.types.scale(options.scale, [1, 1, 1]);
+				obj.rotation.set(r[0], r[1], r[2]);
+				obj.scale.set(s[0], s[1], s[2]);
+				// [jscastro] normalize specular/metalness/shininess from meshes in FBX and GLB model as it would need 5 lights to illuminate them properly
+				if (options.normalize) {
+					normalizeSpecular(obj);
+				}
+				obj.name = "model";
+				let userScaleGroup = Objects.prototype._makeGroup(obj, options);
+				Objects.prototype._addMethods(userScaleGroup);
+				//[jscastro] calculate automatically the pivotal center of the object
+				userScaleGroup.setAnchor(options.anchor);
+				//[jscastro] override the center calculated if the object has adjustments
+				userScaleGroup.setCenter(options.adjustment);
+				//[jscastro] if the object is excluded from raycasting
+				userScaleGroup.raycasted = options.raycasted;
+				//[jscastro] return to cache
+				promise(userScaleGroup);
+				//[jscastro] then return to the client-side callback
+				cb(userScaleGroup);
+				//[jscastro] apply the fixed zoom scale if needed
+				userScaleGroup.setFixedZoom(options.mapScale);
+				//[jscastro] initialize the default animation to avoid issues with skeleton position
+				userScaleGroup.idle();
+
+			}, () => (null), error => {
 				console.error("Could not load model file: " + options.obj + " \n " + error.stack);
 				promise("Error loading the model");
+			});
 		});
-
-	};
+	}
 
 	//[jscastro] some FBX/GLTF models have too much specular effects for mapbox
 	function normalizeSpecular(model) {
@@ -132,6 +152,12 @@ function loadObj(options, cb, promise) {
 		});
 	}
 
+	function configureLoader(loader, type) {
+		if (type !== 'ifc') {
+			return Promise.resolve();
+		}
+		return loader.setup();
+	}
 }
 
-module.exports = exports = loadObj;
+module.exports = loadObj;
